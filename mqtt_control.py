@@ -98,6 +98,16 @@ def get_ip(ext_server_ip):
 	return ip
 
 
+def get_broker_ip():
+	# 自分のIPからブローカーを推測する。
+	a = get_ip('8.8.8.8')
+	brokerip = a
+	if 0 <= a.find('192.'):
+		brokerip = '192.168.0.17'
+	if 0 <= a.find('10.'):
+		brokerip = '10.0.0.2'
+	return brokerip
+
 # def CheckWord(txt, keyw):
 # 	ans = txt.split()
 # 	p = ans[0].find(keyw)
@@ -117,7 +127,7 @@ class MQTTMonitor(QWidget):
 		self.client = QtMqttClient(self)
 		self.client.stateChanged.connect(self.on_stateChanged)
 		self.client.messageSignal.connect(self.on_messageSignal)
-		self.client.hostname = "10.0.0.2"
+		self.client.hostname = get_broker_ip()
 		self.client.connectToHost()
 
 	@QtCore.pyqtSlot(int)
