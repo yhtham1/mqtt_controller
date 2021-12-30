@@ -31,60 +31,35 @@ def ext_from(s1):
 
 
 	print('IN :{}'.format(s1))
-	print('OUT:{}'.format(ans))
+	# print('OUT:{}'.format(ans))
 	return ans
 
-
-def ext_press(s1):
+def ext_word(s1, keyword):
 	ans = ''
-	##########################################
-	# pattern = re.compile(r".*\(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\).*")
-	pattern = re.compile(r" pres:(\d{3,4}.\d{2}) ")
-	m = pattern.search(s1)
-	if m:
-		ans = m.group(1)
+	if 0<=s1.find(keyword+':'):
+		ans = s1[len(keyword)+1:]
 	return ans
-
-
-def ext_temp(s1):
-	ans = ''
-	##########################################
-	# pattern = re.compile(r".*\(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\).*")
-	pattern = re.compile(r" temp:(\d{2}.\d{2}) ")
-	m = pattern.search(s1)
-	if m:
-		ans = m.group(1)
-	return ans
-
-
-def ext_datetime(s1):
-	ans = ''
-	##########################################
-	pattern = re.compile(r"date:(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) ")
-	m = pattern.search(s1)
-	if m:
-		ans = m.group(1)
-		return ans
-	return ans
-
-
-def ext_since(s1):
-	ans = ''
-	##########################################
-	pattern = re.compile(r".*since:(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}).*")
-	m = pattern.search(s1)
-	if m:
-		ans = m.group(1)
-		return ans
-	return ans
-
 
 def ext_paras(a):
-	from1 = ext_from(a)
-	date1 = ext_datetime(a)
-	pres1 = ext_press(a)
-	temp1 = ext_temp(a)
-	since1 = ext_since(a)
+
+	if 0>a.find('\t'):
+		print('IN:{}'.format(a))
+		return '','','','',''
+	print('IN:{}'.format(a))
+	# print('IN:{}'.format(a))
+	date1=''
+	pres1=''
+	temp1=''
+	since1=''
+	x = a.find(':')
+	from1 = a[:x]
+	t = a[x+1:]
+	b = t.split('\t')
+	for it in b:
+		date1 += ext_word(it,'date')
+		pres1 += ext_word(it,'pres')
+		temp1 += ext_word(it,'temp')
+		since1 += ext_word(it,'since')
 	# print('[{}] -> [{}]'.format(a, ans),end='')
 	return from1, date1, pres1, temp1, since1
 
@@ -105,7 +80,7 @@ def get_broker_ip():
 	if 0 <= a.find('192.'):
 		brokerip = '192.168.0.17'
 	if 0 <= a.find('10.'):
-		brokerip = '10.0.0.2'
+		brokerip = '10.0.0.4'
 	return brokerip
 
 # def CheckWord(txt, keyw):
@@ -283,7 +258,7 @@ class MQTTMonitor(QWidget):
 		self.setLayout(self.mmm)
 		self.setGeometry(800, 100, 650, 400)
 
-		self.setWindowTitle('MQTT CONTROLLER 2021-12-26')
+		self.setWindowTitle('MQTT CONTROLLER 2021-12-29')
 		self.show()
 
 
@@ -294,7 +269,7 @@ def pub1(topic, msg):
 	if 0 <= a.find('192.'):
 		brokerip = '192.168.0.17'
 	if 0 <= a.find('10.'):
-		brokerip = '10.0.0.2'
+		brokerip = '10.0.0.4'
 
 	client = mqtt.Client()  # クラスのインスタンス(実体)の作成
 	client.connect(brokerip, 1883, 60)  # 接続先は自分自身
