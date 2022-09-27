@@ -131,37 +131,17 @@ class MQTTMonitor(QWidget):
 				t1 = it.title()
 				print('subscribe:{}'.format(t1))
 				self.client.subscribe(it.title())
-		# self.client.subscribe("lolin-d32-pro")
-		# self.client.subscribe("room2F")
 
 	@QtCore.pyqtSlot(str)
 	def on_messageSignal(self, msg):
 		# print('on_messageSignal:', msg)
 		grp_name, datblk = ext_paras2(msg)
-		# grp_name, date1, pres1, temp1, since1 = ext_paras(msg)
-		# print('from[{}]'.format(grp_name))
 		x = self.findChild(QGroupBox, grp_name)
 		if None != x:
 			for it in datblk:
 				lbl1 = x.findChild(QLabel, it)
 				if None != lbl1:
 					lbl1.setText(datblk[it])
-
-	# if None != x:
-		# 	lbl1 = x.findChild(QLabel, 'TEMP')
-		# 	if None != lbl1:
-		# 		lbl1.setText(temp1)
-		# 	lbl1 = x.findChild(QLabel, 'DATE')
-		# 	if None != lbl1:
-		# 		lbl1.setText(date1)
-		# 	lbl1 = x.findChild(QLabel, 'PRES')
-		# 	if None != lbl1:
-		# 		lbl1.setText(pres1)
-		# 	lbl1 = x.findChild(QLabel, 'SINCE')
-		# 	if None != lbl1:
-		# 		lbl1.setText(since1)
-		# return
-
 
 	def make_grp(self, title):
 		def make_h(title, v):
