@@ -155,40 +155,4 @@ class QtMqttClient(QtCore.QObject):
 ################################################################################
 ################################################################################
 
-class MyMon(QtWidgets.QWidget):
-	def __init__(self, parent=None):
-		super(MyMon, self).__init__(parent)
-
-		lay = QtWidgets.QVBoxLayout(self)
-		self.lcd_number = QtWidgets.QLineEdit('AAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBB')
-		lay.addWidget(self.lcd_number)
-
-		self.setGeometry(800, 100, 250, 400)
-
-		self.client = QtMqttClient(self)
-		self.client.stateChanged.connect(self.on_stateChanged)
-		self.client.messageSignal.connect(self.on_messageSignal)
-		self.client.hostname = "10.0.0.2"
-		self.client.connectToHost()
-
-	@QtCore.pyqtSlot(int)
-	def on_stateChanged(self, state):
-		if state == QtMqttClient.Connected:
-			print(state, 'original')
-			self.client.subscribe("pizero-temp")
-			self.client.subscribe("lolin-d32-pro")
-			self.client.subscribe("room2F")
-
-	@QtCore.pyqtSlot(str)
-	def on_messageSignal(self, msg):
-		print('test ', msg)
-		self.lcd_number.setText(msg)
-
-
-if __name__ == '__main__':
-	import sys
-
-	app = QtWidgets.QApplication(sys.argv)
-	w = MyMon()
-	w.show()
-	sys.exit(app.exec_())
+### EOF ###
