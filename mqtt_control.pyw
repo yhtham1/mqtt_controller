@@ -129,7 +129,7 @@ class MQTTMonitor(QWidget):
 			print('connected')
 			for it in self.uidb:
 				t1 = it.title()
-				print('subscribe:{}'.format(t1))
+				print('subscrime:{}'.format(t1))
 				self.client.subscribe(it.title())
 		# self.client.subscribe("lolin-d32-pro")
 		# self.client.subscribe("room2F")
