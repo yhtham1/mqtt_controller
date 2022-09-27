@@ -2,21 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import math
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from qtmqtt import QtMqttClient
-import json
-import time
-import struct
-import pickle
-
+import re
 import socket
 import paho.mqtt.client as mqtt
-import sys
-import re
 
 
 def ext_from(s1):
