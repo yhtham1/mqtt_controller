@@ -110,10 +110,10 @@ def get_broker_ip():
 # 	return ans
 
 
-class MQTTMonitor(QWidget):
+class MQTTController(QWidget):
 
 	def __init__(self, parent=None):
-		super(MQTTMonitor, self).__init__(parent)
+		super(MQTTController, self).__init__(parent)
 		self.uidb = []
 		self.initUI()
 
@@ -286,7 +286,7 @@ class MQTTMonitor(QWidget):
 		self.setLayout(self.mmm)
 		self.setGeometry(800, 100, 650, 400)
 
-		self.setWindowTitle('MQTT CONTROLLER 2021-12-29')
+		self.setWindowTitle('MQTT CONTROLLER 2021-12-30')
 		self.show()
 
 
@@ -312,7 +312,7 @@ def main():
 	# print(ans)
 	# return
 	app = QApplication(sys.argv)
-	ex = MQTTMonitor()
+	ex = MQTTController()
 	sys.exit(app.exec_())
 
 
