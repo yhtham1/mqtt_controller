@@ -134,6 +134,9 @@ class MQTTAmp(QWidget):
 	def ch1(self):
 		pub1('AMP/CH', '1')
 
+	def init1(self):
+		pub1('AMP/INIT', ' ')
+
 	def ledOn(self):
 		pub1('lamp', 'white 90')
 		pub1('lamp', 'warm 90')
@@ -179,6 +182,10 @@ class MQTTAmp(QWidget):
 
 		b = QPushButton('1')
 		b.clicked.connect(self.ch1)
+		self.mmm.addWidget(b)
+
+		b = QPushButton('INIT')
+		b.clicked.connect(self.init1)
 		self.mmm.addWidget(b)
 
 		b = QPushButton('quit')
