@@ -15,6 +15,65 @@ import pickle
 
 import socket
 import paho.mqtt.client as mqtt
+tcldata = (
+	('チャンネル↑ ','0x34689D4BB4'),
+	('チャンネル↓ ','0x34689DCB34'),
+	('          ↑ ','0x34689D659A'),
+	('          ↓ ','0x34689DE51A'),
+	('          右 ','0x34689D15EA'),
+	('          左 ','0x34689D956A'),
+	('戻る         ','0x34689D1BE4'),
+	('決定         ','0x34689DD02F'),
+	('再生         ','0x34689D57A8'),
+	('早送り       ','0x34689DC738'),
+	('早戻し       ','0x34689D47B8'),
+	('停止         ','0x34689D07F8'),
+	('一時停止     ','0x34689D6798'),
+	('消音         ','0x34689D03FC'),
+	('音量+        ','0x34689D0BF4'),
+	('音量-        ','0x34689D8B74'),
+	('電源         ','0x34689DAB54'),
+	('入力切替     ','0x34689D3AC5'),
+	('電源         ','0x34689DAB54'),
+	('地デジ       ', '0x34689DAA55'),
+	('BS/CS        ','0x34689DFA05'),
+	('4K           ','0x34689DDA25'),
+	('CH1          ','0x34689D738C'),
+	('CH2          ','0x34689DB34C'),
+	('CH3          ','0x34689D33CC'),
+	('CH4          ','0x34689DD32C'),
+	('CH5          ','0x34689D53AC'),
+	('CH6          ','0x34689D936C'),
+	('CH7          ','0x34689D13EC'),
+	('CH8          ','0x34689DE31C'),
+	('CH9          ','0x34689D639C'),
+	('CH0          ','0x34689D0AF5'),
+	('CH11         ','0x34689D8A75'),
+	('CH12         ','0x34689D4AB5'),
+	)
+	# ('青           ','0x34689DE41B'),
+	# ('赤           ','0x34689DFF00'),
+	# ('緑           ','0x34689DE817'),
+	# ('黄           ','0x34689DD827'),
+	# ('画面表示     ','0x34689DC33C'),
+	# ('字幕         ','0x34689DFE01'),
+	# ('音声切替     ','0x34689DA55A'),
+	# ('早戻し       ','0x34689D47B8'),
+	# ('再生         ','0x34689D57A8'),
+	# ('早送り       ','0x34689DC738'),
+	# ('前           ','0x34689DA25D'),
+	# ('一時停止     ','0x34689D6798'),
+	# ('次           ','0x34689D35CA'),
+	# ('録画         ','0x34689D17E8'),
+	# ('3桁入力      ','0x34689DCA35'),
+	# ('停止         ','0x34689D07F8'),
+	# ('NETFLIX      ','0x34689D08F7'),
+	# ('hulu         ','0x34689DA45B'),
+	# ('U-NEXT       ','0x34689D5CA3'),
+	# ('Abema        ','0x34689D3CC3'),
+	# ('YouTube      ','0x34689DB847'),
+	# ('T            ','0x34689D38C7'),
+	# )
 
 
 def ext_paras2(a):
@@ -22,7 +81,7 @@ def ext_paras2(a):
 	if 0>a.find('\t'):
 		print('IN:{}'.format(a))
 		return '','','','',''
-	print('IN:{}'.format(a))
+	# print('IN:{}'.format(a))
 	x = a.find(':')
 	from_dev = a[:x]
 	t = a[x+1:]
@@ -53,13 +112,72 @@ def get_broker_ip():
 		brokerip = '10.0.0.4'
 	return brokerip
 
+class PUB2():
+	def __init__(self, topic, msg):
+		self.topic = topic
+		self.msg = msg
+	def __call__(self):
+		pub1(self.topic, self.msg)
+
+
+class CallUser:
+	def __init__(self, topic, msg):
+		self.topic = topic
+		self.msg = msg
+
+	def __call__(self):
+		pub1(self.topic, self.msg)
+
+class QPB(QPushButton):
+	def __init__(self, parent=None):
+		super(QPB, self).__init__(parent)
+
+# QTextLine
+# QLineEdit
+
+
 class MQTTAmp(QWidget):
 
 	def __init__(self, parent=None):
 		super(MQTTAmp, self).__init__(parent)
+
+
+		style = '''
+			QWidget1{
+				padding:    1px;
+				margin:     1px;
+				background-color:pink;
+			}
+			QHBoxLayout{
+				margin-top: 0px;
+				margin-bottom: 0px;
+				margin-left: 2px;
+				margin-right: 2px;
+			}
+			QVBoxLayout{
+				margin-top: 0px;
+				margin-bottom: 0px;
+				margin-left: 2px;
+				margin-right: 2px;
+			}
+			QLineEdit{
+				align:right;
+				qproperty-alignment: AlignRight;
+				border-style: outset;
+				border-width:		1px;
+				border-color:		red;
+				background-color:yellow;
+			}
+			QPushButton{
+				min-height: 50px;
+				font-size:  20pt;
+			}
+			'''
+		self.setStyleSheet(style)
+
+
 		self.uidb = []
 		self.initUI()
-
 		self.client = QtMqttClient(self)
 		self.client.stateChanged.connect(self.on_stateChanged)
 		self.client.messageSignal.connect(self.on_messageSignal)
@@ -122,24 +240,9 @@ class MQTTAmp(QWidget):
 		print('quit')
 		QCoreApplication.quit()
 
-	def volup(self):
-		pub1('AMP/UPVOL', ' ')
-
-	def voldown(self):
-		pub1('AMP/DOWNVOL', ' ')
-
-	def ch0(self):
-		pub1('AMP/CH', '0')
-
-	def ch1(self):
-		pub1('AMP/CH', '1')
-
-	def init1(self):
-		pub1('AMP/INIT', ' ')
-
 	def ledOn(self):
-		pub1('lamp', 'white 90')
-		pub1('lamp', 'warm 90')
+		pub1('lamp', 'white 80')
+		pub1('lamp', 'warm 80')
 
 	def ledOff(self):
 		pub1('lamp', 'white 0')
@@ -168,57 +271,87 @@ class MQTTAmp(QWidget):
 		self.mmm.addWidget(g)
 		self.uidb.append(g)
 
-		b = QPushButton('up')
-		b.clicked.connect(self.volup)
-		self.mmm.addWidget(b)
-
-		b = QPushButton('down')
-		b.clicked.connect(self.voldown)
-		self.mmm.addWidget(b)
-
-		b = QPushButton('0')
-		b.clicked.connect(self.ch0)
-		self.mmm.addWidget(b)
-
-		b = QPushButton('1')
-		b.clicked.connect(self.ch1)
-		self.mmm.addWidget(b)
-
-		b = QPushButton('INIT')
-		b.clicked.connect(self.init1)
-		self.mmm.addWidget(b)
-
 		b = QPushButton('quit')
 		b.clicked.connect(self.quit)
 		self.mmm.addWidget(b)
 
+		v = QVBoxLayout()
+		b = QPushButton('up')
+		b.clicked.connect(PUB2('AMP/UPVOL',' '))
+		# b.clicked.connect(self.volup)
+		v.addWidget(b)
+
+		b = QPushButton('down')
+		# b.clicked.connect(self.voldown)
+		b.clicked.connect(PUB2('AMP/DOWNVOL',' '))
+		v.addWidget(b)
+
+		b = QPushButton('0')
+		b.clicked.connect(PUB2('AMP/SETCH', '0'))
+		v.addWidget(b)
+
+		b = QPushButton('1')
+		b.clicked.connect(PUB2('AMP/SETCH', '1'))
+		v.addWidget(b)
+
+		b = QPushButton('2')
+		b.clicked.connect(PUB2('AMP/SETCH', '2'))
+		v.addWidget(b)
+
+		b = QPushButton('3')
+		b.clicked.connect(PUB2('AMP/SETCH', '3'))
+		v.addWidget(b)
+
+		b = QPushButton('INIT LCD(1)')
+		b.clicked.connect(PUB2('AMP/INIT', '1'))
+		v.addWidget(b)
+
+		b = QPushButton('INIT ATT(2)')
+		b.clicked.connect(PUB2('AMP/INIT', '2'))
+		v.addWidget(b)
+
 		b = QPushButton('lamp on')
 		b.clicked.connect(self.ledOn)
-		self.mmm.addWidget(b)
+		v.addWidget(b)
 
 		b = QPushButton('lamp off')
 		b.clicked.connect(self.ledOff)
-		self.mmm.addWidget(b)
+		v.addWidget(b)
 
 		b = QPushButton('chime alarm')
 		b.clicked.connect(self.chimeAlarm)
-		self.mmm.addWidget(b)
+		v.addWidget(b)
 
 		b = QPushButton('fancontrol power')
 		b.clicked.connect(self.fanPower)
-		self.mmm.addWidget(b)
+		v.addWidget(b)
 
 		b = QPushButton('fancontrol High')
 		b.clicked.connect(self.fanHigh)
-		self.mmm.addWidget(b)
+		v.addWidget(b)
 
 		b = QPushButton('fancontrol Low')
 		b.clicked.connect(self.fanLow)
-		self.mmm.addWidget(b)
+		v.addWidget(b)
 
 		b = QPushButton('fancontrol Swing')
 		b.clicked.connect(self.fanSwing)
-		self.mmm.addWidget(b)
+		v.addWidget(b)
+		v.addStretch()
+
+		h1 = QHBoxLayout()
+		h1.addLayout(v)
+		n = int(len(tcldata))
+		print(n, n/2)
+		st = 0
+		for i in (0,17):
+			v = QVBoxLayout()
+			for it in tcldata[i:i+17]:
+				b = QPushButton(it[0].strip())
+				b.clicked.connect(CallUser('ir_aeha',it[1]))
+				v.addWidget(b)
+			h1.addLayout(v)
+		self.mmm.addLayout(h1)
 
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
