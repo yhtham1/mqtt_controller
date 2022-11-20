@@ -15,24 +15,23 @@ import pickle
 
 import socket
 import paho.mqtt.client as mqtt
+
+# NEC照明(RE0208)
+re0208data = (
+	('ON/OFF','0x41B6D52A'),
+	('全灯  ','0x41B6659A'),
+	('明    ','0x41B65DA2'),
+	('暗    ','0x41B6DD22'),
+	('常夜灯','0x41B63DC2'),
+	('タイマ','0x41B6F50A'),
+	('留守番','0x41B68E98'),
+)
+
+
+
 tcldata = (
-	('チャンネル↑ ','0x34689D4BB4'),
-	('チャンネル↓ ','0x34689DCB34'),
-	('          ↑ ','0x34689D659A'),
-	('          ↓ ','0x34689DE51A'),
-	('          右 ','0x34689D15EA'),
-	('          左 ','0x34689D956A'),
-	('戻る         ','0x34689D1BE4'),
-	('決定         ','0x34689DD02F'),
-	('再生         ','0x34689D57A8'),
-	('早送り       ','0x34689DC738'),
-	('早戻し       ','0x34689D47B8'),
-	('停止         ','0x34689D07F8'),
-	('一時停止     ','0x34689D6798'),
-	('消音         ','0x34689D03FC'),
-	('音量+        ','0x34689D0BF4'),
-	('音量-        ','0x34689D8B74'),
-	('電源         ','0x34689DAB54'),
+
+
 	('入力切替     ','0x34689D3AC5'),
 	('電源         ','0x34689DAB54'),
 	('地デジ       ', '0x34689DAA55'),
@@ -50,30 +49,46 @@ tcldata = (
 	('CH0          ','0x34689D0AF5'),
 	('CH11         ','0x34689D8A75'),
 	('CH12         ','0x34689D4AB5'),
+	('音量+        ', '0x34689D0BF4'),
+	('音量-        ', '0x34689D8B74'),
+	('消音         ', '0x34689D03FC'),
+	('メニュー設定         ', '0x34689D0CF3'),
+	('チャンネル↑ ', '0x34689D4BB4'),
+	('チャンネル↓ ', '0x34689DCB34'),
+	('機能     ', '0x34689DC837'),
+	('ホーム     ', '0x34689DEF10'),
+	('録画リスト     ', '0x34689DBA45'),
+	('番組表     ', '0x34689DA758'),
+	('          ↑ ', '0x34689D659A'),
+	('          ↓ ', '0x34689DE51A'),
+	('          → ', '0x34689D15EA'),
+	('          ← ', '0x34689D956A'),
+	('決定         ', '0x34689DD02F'),
+	('戻る         ', '0x34689D1BE4'),
+	('dデータ     ', '0x34689D9A65'),
+	('青           ','0x34689DE41B'),
+	('赤           ','0x34689DFF00'),
+	('緑           ','0x34689DE817'),
+	('黄           ','0x34689DD827'),
+	('画面表示     ', '0x34689DC33C'),
+	('字幕         ','0x34689DFE01'),
+	('音声切替     ','0x34689DA55A'),
+	('早戻し       ','0x34689D47B8'),
+	('再生         ','0x34689D57A8'),
+	('早送り       ','0x34689DC738'),
+	('前           ','0x34689DA25D'),
+	('一時停止     ','0x34689D6798'),
+	('次           ','0x34689D35CA'),
+	('録画         ','0x34689D17E8'),
+	('3桁入力      ','0x34689DCA35'),
+	('停止         ','0x34689D07F8'),
+	('NETFLIX      ','0x34689D08F7'),
+	('hulu         ','0x34689DA45B'),
+	('U-NEXT       ','0x34689D5CA3'),
+	('Abema        ','0x34689D3CC3'),
+	('YouTube      ','0x34689DB847'),
+	('T            ','0x34689D38C7'),
 	)
-	# ('青           ','0x34689DE41B'),
-	# ('赤           ','0x34689DFF00'),
-	# ('緑           ','0x34689DE817'),
-	# ('黄           ','0x34689DD827'),
-	# ('画面表示     ','0x34689DC33C'),
-	# ('字幕         ','0x34689DFE01'),
-	# ('音声切替     ','0x34689DA55A'),
-	# ('早戻し       ','0x34689D47B8'),
-	# ('再生         ','0x34689D57A8'),
-	# ('早送り       ','0x34689DC738'),
-	# ('前           ','0x34689DA25D'),
-	# ('一時停止     ','0x34689D6798'),
-	# ('次           ','0x34689D35CA'),
-	# ('録画         ','0x34689D17E8'),
-	# ('3桁入力      ','0x34689DCA35'),
-	# ('停止         ','0x34689D07F8'),
-	# ('NETFLIX      ','0x34689D08F7'),
-	# ('hulu         ','0x34689DA45B'),
-	# ('U-NEXT       ','0x34689D5CA3'),
-	# ('Abema        ','0x34689D3CC3'),
-	# ('YouTube      ','0x34689DB847'),
-	# ('T            ','0x34689D38C7'),
-	# )
 
 
 def ext_paras2(a):
@@ -133,6 +148,7 @@ class QPB(QPushButton):
 		super(QPB, self).__init__(parent)
 
 # QTextLine
+# QTextEdit
 # QLineEdit
 
 
@@ -173,7 +189,7 @@ class MQTTAmp(QWidget):
 				font-size:  20pt;
 			}
 			'''
-		self.setStyleSheet(style)
+		# self.setStyleSheet(style)
 
 
 		self.uidb = []
@@ -341,17 +357,45 @@ class MQTTAmp(QWidget):
 
 		h1 = QHBoxLayout()
 		h1.addLayout(v)
+		# ------------------------------------------------------
 		n = int(len(tcldata))
-		print(n, n/2)
+		lines = 17
+		cols = int(n/lines)
+		print(n, lines, cols)
 		st = 0
-		for i in (0,17):
+		ct = 0
+		for i in range(cols):
 			v = QVBoxLayout()
-			for it in tcldata[i:i+17]:
+			for it in tcldata[ct:ct+lines]:
 				b = QPushButton(it[0].strip())
 				b.clicked.connect(CallUser('ir_aeha',it[1]))
 				v.addWidget(b)
+				ct += 1
 			h1.addLayout(v)
+
+		v = QVBoxLayout()
+		for it in tcldata[ct:ct+lines]:
+			b = QPushButton(it[0].strip())
+			b.clicked.connect(CallUser('ir_aeha',it[1]))
+			v.addWidget(b)
+			ct += 1
+		h1.addLayout(v)
+
+
+
+
 		self.mmm.addLayout(h1)
+		# ------------------------------------------------------
+
+		v = QVBoxLayout()
+		for it in re0208data:
+			b = QPushButton(it[0].strip())
+			b.clicked.connect(CallUser('ir_nec', it[1]))
+			v.addWidget(b)
+		h1.addLayout(v)
+
+
+
 
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
@@ -375,8 +419,22 @@ def pub1(topic, msg):
 	client.publish(topic, msg)
 	client.disconnect()
 
+def keyfuync(p):
+	j = int(p[1],16)
+	print('keyfunc ', p[0], p[1])
+	# print(type(p), len(p), j)
+	return j
+
+def test1():
+	a = sorted(tcldata,key=keyfuync)
+	for it in a:
+		print(it)
+
+
 
 def main():
+	# test1()
+	# return
 	app = QApplication(sys.argv)
 	ex = MQTTAmp()
 	sys.exit(app.exec_())
