@@ -15,6 +15,20 @@ import pickle
 
 import socket
 import paho.mqtt.client as mqtt
+
+# NEC照明(RE0208)
+re0208data = (
+	('ON/OFF','0x41B6D52A'),
+	('全灯  ','0x41B6659A'),
+	('明    ','0x41B65DA2'),
+	('暗    ','0x41B6DD22'),
+	('常夜灯','0x41B63DC2'),
+	('タイマ','0x41B6F50A'),
+	('留守番','0x41B68E98'),
+)
+
+
+
 tcldata = (
 	('チャンネル↑ ','0x34689D4BB4'),
 	('チャンネル↓ ','0x34689DCB34'),
@@ -133,6 +147,7 @@ class QPB(QPushButton):
 		super(QPB, self).__init__(parent)
 
 # QTextLine
+# QTextEdit
 # QLineEdit
 
 
@@ -352,6 +367,16 @@ class MQTTAmp(QWidget):
 				v.addWidget(b)
 			h1.addLayout(v)
 		self.mmm.addLayout(h1)
+
+		v = QVBoxLayout()
+		for it in re0208data:
+			b = QPushButton(it[0].strip())
+			b.clicked.connect(CallUser('ir_nec', it[1]))
+			v.addWidget(b)
+		h1.addLayout(v)
+
+
+
 
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
