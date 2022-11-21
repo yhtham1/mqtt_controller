@@ -394,9 +394,6 @@ class MQTTAmp(QWidget):
 			v.addWidget(b)
 		h1.addLayout(v)
 
-
-
-
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
 		self.setGeometry(800, 100, 650, 400)
