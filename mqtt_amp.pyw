@@ -367,7 +367,7 @@ class MQTTAmp(QWidget):
 
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
-		self.setGeometry(800, 100, 650, 400)
+		# self.setGeometry(800, 100, 650, 400)
 
 		self.setWindowTitle('AMP CONTROLLER 2022-10-25')
 		self.show()
