@@ -394,19 +394,6 @@ class MQTTAmp(QWidget):
 			v.addWidget(b)
 		h1.addLayout(v)
 
-
-
-
-		v = QVBoxLayout()
-		for it in re0208data:
-			b = QPushButton(it[0].strip())
-			b.clicked.connect(CallUser('ir_nec', it[1]))
-			v.addWidget(b)
-		h1.addLayout(v)
-
-
-
-
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
 		self.setGeometry(800, 100, 650, 400)
