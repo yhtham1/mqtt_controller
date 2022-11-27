@@ -264,13 +264,11 @@ class MQTTAmp(QWidget):
 
 		v = QVBoxLayout()
 		b = QPushButton('up')
-		b.clicked.connect(PublishConstMessage('AMP/UPVOL', ' '))
-		# b.clicked.connect(self.volup)
+		b.clicked.connect(PublishConstMessage('AMP/UPVOL', '10'))
 		v.addWidget(b)
 
 		b = QPushButton('down')
-		# b.clicked.connect(self.voldown)
-		b.clicked.connect(PublishConstMessage('AMP/DOWNVOL', ' '))
+		b.clicked.connect(PublishConstMessage('AMP/DOWNVOL', '10'))
 		v.addWidget(b)
 
 		b = QPushButton('0')
