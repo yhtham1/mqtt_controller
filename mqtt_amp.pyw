@@ -127,15 +127,8 @@ def get_broker_ip():
 		brokerip = '10.0.0.4'
 	return brokerip
 
-class PUB2():
-	def __init__(self, topic, msg):
-		self.topic = topic
-		self.msg = msg
-	def __call__(self):
-		pub1(self.topic, self.msg)
 
-
-class CallUser:
+class PublishConstMessage:
 	def __init__(self, topic, msg):
 		self.topic = topic
 		self.msg = msg
@@ -143,13 +136,6 @@ class CallUser:
 	def __call__(self):
 		pub1(self.topic, self.msg)
 
-class QPB(QPushButton):
-	def __init__(self, parent=None):
-		super(QPB, self).__init__(parent)
-
-# QTextLine
-# QTextEdit
-# QLineEdit
 
 
 class MQTTAmp(QWidget):
@@ -264,21 +250,6 @@ class MQTTAmp(QWidget):
 		pub1('lamp', 'white 0')
 		pub1('lamp', 'warm 0')
 
-	def chimeAlarm(self):
-		pub1('chime', 'alarm')
-
-	def fanPower(self):
-		pub1('fancontrol', 'power')
-
-	def fanHigh(self):
-		pub1('fancontrol', 'high')
-
-	def fanLow(self):
-		pub1('fancontrol', 'low')
-
-	def fanSwing(self):
-		pub1('fancontrol', 'swing')
-
 	def initUI(self):
 		qcore = QWidget(self)
 		self.mmm = QVBoxLayout(qcore)
@@ -293,37 +264,35 @@ class MQTTAmp(QWidget):
 
 		v = QVBoxLayout()
 		b = QPushButton('up')
-		b.clicked.connect(PUB2('AMP/UPVOL',' '))
-		# b.clicked.connect(self.volup)
+		b.clicked.connect(PublishConstMessage('AMP/UPVOL', '10'))
 		v.addWidget(b)
 
 		b = QPushButton('down')
-		# b.clicked.connect(self.voldown)
-		b.clicked.connect(PUB2('AMP/DOWNVOL',' '))
+		b.clicked.connect(PublishConstMessage('AMP/DOWNVOL', '10'))
 		v.addWidget(b)
 
 		b = QPushButton('0')
-		b.clicked.connect(PUB2('AMP/SETCH', '0'))
+		b.clicked.connect(PublishConstMessage('AMP/SETCH', '0'))
 		v.addWidget(b)
 
 		b = QPushButton('1')
-		b.clicked.connect(PUB2('AMP/SETCH', '1'))
+		b.clicked.connect(PublishConstMessage('AMP/SETCH', '1'))
 		v.addWidget(b)
 
 		b = QPushButton('2')
-		b.clicked.connect(PUB2('AMP/SETCH', '2'))
+		b.clicked.connect(PublishConstMessage('AMP/SETCH', '2'))
 		v.addWidget(b)
 
 		b = QPushButton('3')
-		b.clicked.connect(PUB2('AMP/SETCH', '3'))
+		b.clicked.connect(PublishConstMessage('AMP/SETCH', '3'))
 		v.addWidget(b)
 
 		b = QPushButton('INIT LCD(1)')
-		b.clicked.connect(PUB2('AMP/INIT', '1'))
+		b.clicked.connect(PublishConstMessage('AMP/INIT', '1'))
 		v.addWidget(b)
 
 		b = QPushButton('INIT ATT(2)')
-		b.clicked.connect(PUB2('AMP/INIT', '2'))
+		b.clicked.connect(PublishConstMessage('AMP/INIT', '2'))
 		v.addWidget(b)
 
 		b = QPushButton('lamp on')
@@ -335,23 +304,23 @@ class MQTTAmp(QWidget):
 		v.addWidget(b)
 
 		b = QPushButton('chime alarm')
-		b.clicked.connect(self.chimeAlarm)
+		b.clicked.connect(PublishConstMessage('chime', 'alarm'))
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol power')
-		b.clicked.connect(self.fanPower)
+		b.clicked.connect(PublishConstMessage('fancontrol', 'power'))
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol High')
-		b.clicked.connect(self.fanHigh)
+		b.clicked.connect(PublishConstMessage('fancontrol', 'high'))
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol Low')
-		b.clicked.connect(self.fanLow)
+		b.clicked.connect(PublishConstMessage('fancontrol', 'low'))
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol Swing')
-		b.clicked.connect(self.fanSwing)
+		b.clicked.connect(PublishConstMessage('fancontrol', 'swing'))
 		v.addWidget(b)
 		v.addStretch()
 
@@ -368,7 +337,7 @@ class MQTTAmp(QWidget):
 			v = QVBoxLayout()
 			for it in tcldata[ct:ct+lines]:
 				b = QPushButton(it[0].strip())
-				b.clicked.connect(CallUser('ir_aeha',it[1]))
+				b.clicked.connect(PublishConstMessage('ir_aeha', it[1]))
 				v.addWidget(b)
 				ct += 1
 			h1.addLayout(v)
@@ -376,7 +345,7 @@ class MQTTAmp(QWidget):
 		v = QVBoxLayout()
 		for it in tcldata[ct:ct+lines]:
 			b = QPushButton(it[0].strip())
-			b.clicked.connect(CallUser('ir_aeha',it[1]))
+			b.clicked.connect(PublishConstMessage('ir_aeha', it[1]))
 			v.addWidget(b)
 			ct += 1
 		h1.addLayout(v)
@@ -390,13 +359,13 @@ class MQTTAmp(QWidget):
 		v = QVBoxLayout()
 		for it in re0208data:
 			b = QPushButton(it[0].strip())
-			b.clicked.connect(CallUser('ir_nec', it[1]))
+			b.clicked.connect(PublishConstMessage('ir_nec', it[1]))
 			v.addWidget(b)
 		h1.addLayout(v)
 
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
-		self.setGeometry(800, 100, 650, 400)
+		# self.setGeometry(800, 100, 650, 400)
 
 		self.setWindowTitle('AMP CONTROLLER 2022-10-25')
 		self.show()
