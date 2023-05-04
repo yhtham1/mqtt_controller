@@ -238,6 +238,10 @@ class MQTTAmp(QWidget):
 		g.setLayout(v)
 		return g
 
+	def send_iris(self):
+		print('send_iris')
+		pass
+
 	def quit(self):
 		print('quit')
 		QCoreApplication.quit()
@@ -258,6 +262,10 @@ class MQTTAmp(QWidget):
 		self.mmm.addWidget(g)
 		self.uidb.append(g)
 
+		b = QPushButton('iris')
+		# b.clicked.connect(self.send_iris)
+		b.clicked.connect(PublishConstMessage('ir_iris', '2'))
+		self.mmm.addWidget(b)
 		b = QPushButton('quit')
 		b.clicked.connect(self.quit)
 		self.mmm.addWidget(b)
