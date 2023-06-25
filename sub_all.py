@@ -19,7 +19,7 @@ def get_ip(server_ip):
 	s.close()
 	return IP
 # MQTT Broker
-MQTT_HOST = "localhost"		# brokerのアドレス
+# MQTT_HOST = "localhost"		# brokerのアドレス
 MQTT_HOST = "10.0.0.4"		# brokerのアドレス
 MQTT_PORT = 1883			# brokerのport
 MQTT_KEEP_ALIVE = 60		# keep alive
@@ -52,7 +52,7 @@ print('')
 mqttc.connect(MQTT_HOST, MQTT_PORT, MQTT_KEEP_ALIVE)
 
 sub_title = (
-	'#',
+	'lamp',
 )
 #	'temp1',
 #	'esp8266-status',
