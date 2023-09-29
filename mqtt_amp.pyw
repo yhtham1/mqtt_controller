@@ -177,7 +177,6 @@ class MQTTAmp(QWidget):
 		self.client.hostname = get_broker_ip()
 		self.client.connectToHost()
 
-
 		self.uidb = []
 		qcore = QWidget(self)
 		self.mmm = QVBoxLayout(qcore)

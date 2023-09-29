@@ -138,9 +138,6 @@ class MQTTController(QWidget):
 		self.settings.sync()
 		# ------------------------------------------------------------ window位置の保存
 
-
-
-
 	@QtCore.pyqtSlot(int)
 	def on_stateChanged(self, state):
 		if state == QtMqttClient.Connected:
