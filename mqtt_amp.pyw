@@ -255,6 +255,10 @@ class MQTTAmp(QWidget):
 		g.setLayout(v)
 		return g
 
+	def send_iris(self):
+		print('send_iris')
+		pass
+
 	def quit(self):
 		print('quit')
 		QCoreApplication.quit()
@@ -273,6 +277,10 @@ class MQTTAmp(QWidget):
 		self.mmm.addWidget(g)
 		self.uidb.append(g)
 
+		b = QPushButton('iris')
+		# b.clicked.connect(self.send_iris)
+		b.clicked.connect(PublishConstMessage('ir_iris', '2'))
+		self.mmm.addWidget(b)
 		b = QPushButton('quit')
 		b.clicked.connect(self.quit)
 		self.mmm.addWidget(b)
@@ -323,19 +331,19 @@ class MQTTAmp(QWidget):
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol power')
-		b.clicked.connect(PublishConstMessage('fancontrol', 'power'))
+		b.clicked.connect(PublishConstMessage('ir_nec', '0x60C5F807'))
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol High')
-		b.clicked.connect(PublishConstMessage('fancontrol', 'high'))
+		b.clicked.connect(PublishConstMessage('ir_nec', '0x60C5D827'))
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol Low')
-		b.clicked.connect(PublishConstMessage('fancontrol', 'low'))
+		b.clicked.connect(PublishConstMessage('ir_nec', '0x60C5D827'))
 		v.addWidget(b)
 
 		b = QPushButton('fancontrol Swing')
-		b.clicked.connect(PublishConstMessage('fancontrol', 'swing'))
+		b.clicked.connect(PublishConstMessage('ir_nec', '0x60C5F00F'))
 		v.addWidget(b)
 		v.addStretch()
 
