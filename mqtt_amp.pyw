@@ -27,11 +27,7 @@ re0208data = (
 	('留守番','0x41B68E98'),
 )
 
-
-
 tcldata = (
-
-
 	('入力切替     ','0x34689D3AC5'),
 	('電源         ','0x34689DAB54'),
 	('地デジ       ', '0x34689DAA55'),
@@ -92,7 +88,6 @@ tcldata = (
 
 
 def ext_paras2(a):
-
 	if 0>a.find('\t'):
 		print('IN:{}'.format(a))
 		return '','','','',''
@@ -142,8 +137,8 @@ class MQTTAmp(QWidget):
 
 	def __init__(self, parent=None):
 		super(MQTTAmp, self).__init__(parent)
-
-
+		self.settings = QSettings('mqtt_amp.ini',QSettings.IniFormat)
+		self.settings.setIniCodec('utf-8')
 		style = '''
 			QWidget1{
 				padding:    1px;
@@ -176,15 +171,37 @@ class MQTTAmp(QWidget):
 			}
 			'''
 		# self.setStyleSheet(style)
-
-
-		self.uidb = []
-		self.initUI()
 		self.client = QtMqttClient(self)
 		self.client.stateChanged.connect(self.on_stateChanged)
 		self.client.messageSignal.connect(self.on_messageSignal)
 		self.client.hostname = get_broker_ip()
 		self.client.connectToHost()
+
+
+		self.uidb = []
+		qcore = QWidget(self)
+		self.mmm = QVBoxLayout(qcore)
+
+		self.initUI()
+		self.setLayout(self.mmm)
+		self.setWindowTitle('AMP CONTROLLER 2022-10-25')
+		# ------------------------------------------------------------ window位置の再生
+		self.settings.beginGroup('window')
+		# 初回起動のサイズの指定とか、復元とか
+		self.resize(self.settings.value("size", QSize(1024, 768)))
+		self.move(self.settings.value("pos", QPoint(0, 0)))
+		self.settings.endGroup()
+		# ------------------------------------------------------------ window位置の再生
+		self.show()
+
+	def closeEvent(self, e):
+		# ------------------------------------------------------------ window位置の保存
+		self.settings.beginGroup('window')
+		self.settings.setValue("size", self.size())
+		self.settings.setValue("pos", self.pos())
+		self.settings.endGroup()
+		self.settings.sync()
+		# ------------------------------------------------------------ window位置の保存
 
 	@QtCore.pyqtSlot(int)
 	def on_stateChanged(self, state):
@@ -251,8 +268,6 @@ class MQTTAmp(QWidget):
 		pub1('lamp', 'warm 0')
 
 	def initUI(self):
-		qcore = QWidget(self)
-		self.mmm = QVBoxLayout(qcore)
 
 		g = self.make_grp('lamp-status')
 		self.mmm.addWidget(g)
@@ -349,26 +364,15 @@ class MQTTAmp(QWidget):
 			v.addWidget(b)
 			ct += 1
 		h1.addLayout(v)
-
-
-
-
 		self.mmm.addLayout(h1)
 		# ------------------------------------------------------
-
 		v = QVBoxLayout()
 		for it in re0208data:
 			b = QPushButton(it[0].strip())
 			b.clicked.connect(PublishConstMessage('ir_nec', it[1]))
 			v.addWidget(b)
 		h1.addLayout(v)
-
 		self.mmm.addStretch()
-		self.setLayout(self.mmm)
-		# self.setGeometry(800, 100, 650, 400)
-
-		self.setWindowTitle('AMP CONTROLLER 2022-10-25')
-		self.show()
 
 
 def pub1(topic, msg):

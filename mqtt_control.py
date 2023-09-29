@@ -104,17 +104,42 @@ def get_broker_ip():
 
 
 class MQTTController(QWidget):
-
 	def __init__(self, parent=None):
 		super(MQTTController, self).__init__(parent)
+		self.settings = QSettings('mqtt_control.ini',QSettings.IniFormat)
+		self.settings.setIniCodec('utf-8')
 		self.uidb = []
-		self.initUI()
-
 		self.client = QtMqttClient(self)
 		self.client.stateChanged.connect(self.on_stateChanged)
 		self.client.messageSignal.connect(self.on_messageSignal)
 		self.client.hostname = get_broker_ip()
 		self.client.connectToHost()
+		qcore = QWidget(self)
+		self.mmm = QVBoxLayout(qcore)
+		self.initUI()
+		self.setLayout(self.mmm)
+		self.setWindowTitle('MQTT CONTROLLER 2021-12-29')
+		# ------------------------------------------------------------ window位置の再生
+		self.settings.beginGroup('window')
+		# 初回起動のサイズの指定とか、復元とか
+		self.resize(self.settings.value("size", QSize(1024, 768)))
+		self.move(self.settings.value("pos", QPoint(0, 0)))
+		self.settings.endGroup()
+		# ------------------------------------------------------------ window位置の再生
+		self.show()
+
+
+	def closeEvent(self, e):
+		# ------------------------------------------------------------ window位置の保存
+		self.settings.beginGroup('window')
+		self.settings.setValue("size", self.size())
+		self.settings.setValue("pos", self.pos())
+		self.settings.endGroup()
+		self.settings.sync()
+		# ------------------------------------------------------------ window位置の保存
+
+
+
 
 	@QtCore.pyqtSlot(int)
 	def on_stateChanged(self, state):
@@ -192,8 +217,6 @@ class MQTTController(QWidget):
 		pub1('fancontrol', 'swing')
 
 	def initUI(self):
-		qcore = QWidget(self)
-		self.mmm = QVBoxLayout(qcore)
 
 		g = self.make_grp('chime-status')
 		self.mmm.addWidget(g)
@@ -256,11 +279,6 @@ class MQTTController(QWidget):
 		self.mmm.addWidget(b)
 
 		self.mmm.addStretch()
-		self.setLayout(self.mmm)
-		self.setGeometry(800, 100, 650, 400)
-
-		self.setWindowTitle('MQTT CONTROLLER 2021-12-29')
-		self.show()
 
 
 def pub1(topic, msg):
