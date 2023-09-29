@@ -133,7 +133,6 @@ class PublishConstMessage:
 
 
 class MQTTAmp(QWidget):
-
 	def __init__(self, parent=None):
 		super(MQTTAmp, self).__init__(parent)
 		self.settings = QSettings('mqtt_amp.ini',QSettings.IniFormat)
@@ -179,7 +178,6 @@ class MQTTAmp(QWidget):
 		self.uidb = []
 		qcore = QWidget(self)
 		self.mmm = QVBoxLayout(qcore)
-
 		self.initUI()
 		self.setLayout(self.mmm)
 		self.setWindowTitle('AMP CONTROLLER 2022-10-25')
@@ -274,7 +272,7 @@ class MQTTAmp(QWidget):
 		g = self.make_grp('lamp-status')
 		self.mmm.addWidget(g)
 		self.uidb.append(g)
-
+		self.mmm.addStretch()
 		b = QPushButton('iris')
 		# b.clicked.connect(self.send_iris)
 		b.clicked.connect(PublishConstMessage('ir_iris', '2'))
@@ -378,7 +376,6 @@ class MQTTAmp(QWidget):
 			b.clicked.connect(PublishConstMessage('ir_nec', it[1]))
 			v.addWidget(b)
 		h1.addLayout(v)
-		self.mmm.addStretch()
 
 
 def pub1(topic, msg):
