@@ -132,7 +132,6 @@ class PublishConstMessage:
 		pub1(self.topic, self.msg)
 
 
-
 class MQTTAmp(QWidget):
 
 	def __init__(self, parent=None):
