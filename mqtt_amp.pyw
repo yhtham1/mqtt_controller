@@ -10,9 +10,9 @@ import math
 from qtmqtt import QtMqttClient
 
 import PySide6
+# from PySide6 import QtWidgets
 from PySide6 import QtCore
 from PySide6.QtCore import *
-from PySide6 import QtWidgets
 from PySide6.QtWidgets import *
 
 import json
@@ -417,7 +417,7 @@ def main():
 	# return
 	app = QApplication(sys.argv)
 	ex = MQTTAmp()
-	sys.exit(app.exec_())
+	sys.exit(app.exec())
 
 
 if __name__ == '__main__':

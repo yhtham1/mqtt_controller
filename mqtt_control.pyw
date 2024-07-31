@@ -3,10 +3,16 @@
 
 import sys
 import math
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+# from PyQt5 import QtCore, QtWidgets
+# from PyQt5.QtCore import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
+
+from PySide6 import QtCore
+from PySide6.QtCore import *
+from PySide6.QtWidgets import *
+
+
 from qtmqtt import QtMqttClient
 import json
 import time
@@ -123,7 +129,7 @@ class MQTTController(QWidget):
 		self.client.hostname = get_broker_ip()
 		self.client.connectToHost()
 
-	@QtCore.pyqtSlot(int)
+	@QtCore.Slot(int)
 	def on_stateChanged(self, state):
 		if state == QtMqttClient.Connected:
 			print('connected')
@@ -134,7 +140,7 @@ class MQTTController(QWidget):
 		# self.client.subscribe("lolin-d32-pro")
 		# self.client.subscribe("room2F")
 
-	@QtCore.pyqtSlot(str)
+	@QtCore.Slot(str)
 	def on_messageSignal(self, msg):
 		# print('on_messageSignal:', msg)
 		grp_name, datblk = ext_paras2(msg)
@@ -313,7 +319,7 @@ def main():
 	# return
 	app = QApplication(sys.argv)
 	ex = MQTTController()
-	sys.exit(app.exec_())
+	sys.exit(app.exec())
 
 
 if __name__ == '__main__':
