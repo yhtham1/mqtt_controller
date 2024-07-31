@@ -187,7 +187,7 @@ class MQTTAmp(QWidget):
 		self.mmm = QVBoxLayout(qcore)
 		self.initUI()
 		self.setLayout(self.mmm)
-		self.setWindowTitle('AMP CONTROLLER 2022-10-25')
+		self.setWindowTitle('AMP CONTROLLER 2024-7-31')
 		# ------------------------------------------------------------ window位置の再生
 		self.settings.beginGroup('window')
 		# 初回起動のサイズの指定とか、復元とか
