@@ -3,11 +3,18 @@
 
 import sys
 import math
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+# from PyQt5 import QtCore, QtWidgets
+# from PyQt5.QtCore import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
 from qtmqtt import QtMqttClient
+
+import PySide6
+from PySide6 import QtCore
+from PySide6.QtCore import *
+from PySide6 import QtWidgets
+from PySide6.QtWidgets import *
+
 import json
 import time
 import struct
@@ -136,7 +143,7 @@ class MQTTAmp(QWidget):
 	def __init__(self, parent=None):
 		super(MQTTAmp, self).__init__(parent)
 		self.settings = QSettings('mqtt_amp.ini',QSettings.IniFormat)
-		self.settings.setIniCodec('utf-8')
+		# self.settings.setIniCodec('utf-8')
 		style = '''
 			QWidget1{
 				padding:    1px;
@@ -199,7 +206,7 @@ class MQTTAmp(QWidget):
 		self.settings.sync()
 		# ------------------------------------------------------------ window位置の保存
 
-	@QtCore.pyqtSlot(int)
+	@QtCore.Slot(int)
 	def on_stateChanged(self, state):
 		if state == QtMqttClient.Connected:
 			print('connected')
@@ -210,7 +217,7 @@ class MQTTAmp(QWidget):
 		# self.client.subscribe("lolin-d32-pro")
 		# self.client.subscribe("room2F")
 
-	@QtCore.pyqtSlot(str)
+	@QtCore.Slot(str)
 	def on_messageSignal(self, msg):
 		# print('on_messageSignal:', msg)
 		grp_name, datblk = ext_paras2(msg)
