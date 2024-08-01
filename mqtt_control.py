@@ -34,7 +34,6 @@ def ext_word(s1, keyword):
 	return ans
 
 def ext_paras(a):
-
 	if 0>a.find('\t'):
 		print('IN:{}'.format(a))
 		return '','','','',''
