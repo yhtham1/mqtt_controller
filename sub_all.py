@@ -25,7 +25,7 @@ MQTT_PORT = 1883			# brokerのport
 MQTT_KEEP_ALIVE = 60		# keep alive
 
 # broker接続時
-def on_connect(mqttc, obj, flags, rc):
+def on_connect(mqttc, obj, flags, rc,properties):
 	print("rc: " + str(rc))
 
 #メッセージ受信時
@@ -34,7 +34,7 @@ def on_message(mqttc, obj, msg):
 	pp  = msg.payload.decode('ascii')
 	print('[{:15} -- {}]'.format(tpc,pp))
 
-mqttc = mqtt.Client()
+mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_message = on_message  # メッセージ受信時に実行するコールバック関数設定
 mqttc.on_connect = on_connect
 

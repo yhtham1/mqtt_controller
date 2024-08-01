@@ -95,9 +95,9 @@ tcldata = (
 
 
 def ext_paras2(a):
-	if 0>a.find('\t'):
-		print('IN:{}'.format(a))
-		return '','','','',''
+	# if 0>a.find('\t'):
+	# 	print('IN:{}'.format(a))
+	# 	return '','','','',''
 	# print('IN:{}'.format(a))
 	x = a.find(':')
 	from_dev = a[:x]
@@ -211,15 +211,17 @@ class MQTTAmp(QWidget):
 		if state == QtMqttClient.Connected:
 			print('connected')
 			for it in self.uidb:
-				t1 = it.title()
+				t1 = it.title()+'/#'
 				print('subscrime:{}'.format(t1))
-				self.client.subscribe(it.title())
+				self.client.subscribe(t1)
 		# self.client.subscribe("lolin-d32-pro")
-		# self.client.subscribe("room2F")
+		# self.client.subscribe("status/lamp-10.0.32.7")
+		# self.client.subscribe("status/#")
 
 	@QtCore.Slot(str)
 	def on_messageSignal(self, msg):
-		# print('on_messageSignal:', msg)
+		print('on_messageSignal:', msg)
+		return
 		grp_name, datblk = ext_paras2(msg)
 		# grp_name, date1, pres1, temp1, since1 = ext_paras(msg)
 		# print('from[{}]'.format(grp_name))
@@ -276,7 +278,7 @@ class MQTTAmp(QWidget):
 
 	def initUI(self):
 
-		g = self.make_grp('lamp-status')
+		g = self.make_grp('status/lamp')
 		self.mmm.addWidget(g)
 		self.uidb.append(g)
 		self.mmm.addStretch()
@@ -394,7 +396,7 @@ def pub1(topic, msg):
 	if 0 <= a.find('10.'):
 		brokerip = '10.0.0.4'
 
-	client = mqtt.Client()  # クラスのインスタンス(実体)の作成
+	client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)  # クラスのインスタンス(実体)の作成
 	client.connect(brokerip, 1883, 60)  # 接続先は自分自身
 	client.publish(topic, msg)
 	client.disconnect()
