@@ -305,7 +305,7 @@ def pub1(topic, msg):
 	if 0 <= a.find('10.'):
 		brokerip = '10.0.0.4'
 
-	client = mqtt.Client()  # クラスのインスタンス(実体)の作成
+	client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)  # クラスのインスタンス(実体)の作成
 	client.connect(brokerip, 1883, 60)  # 接続先は自分自身
 	client.publish(topic, msg)
 	client.disconnect()
