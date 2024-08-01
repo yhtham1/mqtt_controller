@@ -52,7 +52,7 @@ print('')
 mqttc.connect(MQTT_HOST, MQTT_PORT, MQTT_KEEP_ALIVE)
 
 sub_title = (
-	'lamp',
+	'#',
 )
 #	'temp1',
 #	'esp8266-status',
