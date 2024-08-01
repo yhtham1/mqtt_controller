@@ -2,10 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+# from PyQt5 import QtCore, QtWidgets
+# from PyQt5.QtCore import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
+
+
+from PySide6 import QtCore
+from PySide6.QtCore import *
+from PySide6.QtWidgets import *
+
 from qtmqtt import QtMqttClient
 import re
 import socket
@@ -106,7 +112,7 @@ class MQTTController(QWidget):
 	def __init__(self, parent=None):
 		super(MQTTController, self).__init__(parent)
 		self.settings = QSettings('mqtt_control.ini',QSettings.IniFormat)
-		self.settings.setIniCodec('utf-8')
+		# self.settings.setIniCodec('utf-8')
 		self.uidb = []
 		self.client = QtMqttClient(self)
 		self.client.stateChanged.connect(self.on_stateChanged)
@@ -137,7 +143,7 @@ class MQTTController(QWidget):
 		self.settings.sync()
 		# ------------------------------------------------------------ window位置の保存
 
-	@QtCore.pyqtSlot(int)
+	@QtCore.Slot(int)
 	def on_stateChanged(self, state):
 		if state == QtMqttClient.Connected:
 			print('connected')
@@ -146,7 +152,7 @@ class MQTTController(QWidget):
 				print('subscribe:{}'.format(t1))
 				self.client.subscribe(it.title())
 
-	@QtCore.pyqtSlot(str)
+	@QtCore.Slot(str)
 	def on_messageSignal(self, msg):
 		# print('on_messageSignal:', msg)
 		grp_name, datblk = ext_paras2(msg)
