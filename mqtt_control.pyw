@@ -227,34 +227,35 @@ class MQTTController(QWidget):
 	def initUI(self):
 		qcore = QWidget(self)
 		self.mmm = QVBoxLayout(qcore)
+		self.settings = QSettings('mqtt_control.ini',QSettings.IniFormat)
 
-		g = self.make_grp('chime-status')
-		self.mmm.addWidget(g)
-		self.uidb.append(g)
-
-		g = self.make_grp('esp8266-status')
-		self.mmm.addWidget(g)
-		self.uidb.append(g)
-
-		g = self.make_grp('camera-status')
-		self.mmm.addWidget(g)
-		self.uidb.append(g)
-
-		g = self.make_grp('pizero-temp')
-		self.mmm.addWidget(g)
-		self.uidb.append(g)
-
-		g = self.make_grp('room2F')
-		self.mmm.addWidget(g)
-		self.uidb.append(g)
-
-		g = self.make_grp('lolin-d32-pro')
-		self.mmm.addWidget(g)
-		self.uidb.append(g)
-
-		g = self.make_grp('lamp-status')
-		self.mmm.addWidget(g)
-		self.uidb.append(g)
+		# g = self.make_grp('chime-status')
+		# self.mmm.addWidget(g)
+		# self.uidb.append(g)
+		#
+		# g = self.make_grp('esp8266-status')
+		# self.mmm.addWidget(g)
+		# self.uidb.append(g)
+		#
+		# g = self.make_grp('camera-status')
+		# self.mmm.addWidget(g)
+		# self.uidb.append(g)
+		#
+		# g = self.make_grp('pizero-temp')
+		# self.mmm.addWidget(g)
+		# self.uidb.append(g)
+		#
+		# g = self.make_grp('room2F')
+		# self.mmm.addWidget(g)
+		# self.uidb.append(g)
+		#
+		# g = self.make_grp('lolin-d32-pro')
+		# self.mmm.addWidget(g)
+		# self.uidb.append(g)
+		#
+		# g = self.make_grp('lamp-status')
+		# self.mmm.addWidget(g)
+		# self.uidb.append(g)
 
 		b = QPushButton('quit')
 		b.clicked.connect(self.quit)
@@ -290,11 +291,24 @@ class MQTTController(QWidget):
 
 		self.mmm.addStretch()
 		self.setLayout(self.mmm)
-		self.setGeometry(800, 100, 650, 400)
-
-		self.setWindowTitle('MQTT CONTROLLER 2021-12-30')
+		self.setWindowTitle('MQTT CONTROLLER 2024-09-02')
+		# ------------------------------------------------------------ window位置の再生
+		self.settings.beginGroup('window')
+		# 初回起動のサイズの指定とか、復元とか
+		self.resize(self.settings.value("size", QSize(1024, 480)))
+		self.move(self.settings.value("pos", QPoint(0, 0)))
+		self.settings.endGroup()
+		# ------------------------------------------------------------ window位置の再生
 		self.show()
 
+	def closeEvent(self, e):
+		# ------------------------------------------------------------ window位置の保存
+		self.settings.beginGroup('window')
+		self.settings.setValue("size", self.size())
+		self.settings.setValue("pos", self.pos())
+		self.settings.endGroup()
+		self.settings.sync()
+		# ------------------------------------------------------------ window位置の保存
 
 def pub1(topic, msg):
 	# 自分のIPからブローカーを推測する。
