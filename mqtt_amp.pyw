@@ -3,14 +3,9 @@
 
 import sys
 import math
-# from PyQt5 import QtCore, QtWidgets
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
+
 from qtmqtt import QtMqttClient
 
-import PySide6
-# from PySide6 import QtWidgets
 from PySide6 import QtCore
 from PySide6.QtCore import *
 from PySide6.QtWidgets import *
