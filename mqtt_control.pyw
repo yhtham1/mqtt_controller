@@ -2,11 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import math
-# from PyQt5 import QtCore, QtWidgets
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
+import re
+import socket
 
 from PySide6 import QtCore
 from PySide6.QtCore import *
@@ -19,10 +16,7 @@ import time
 import struct
 import pickle
 
-import socket
 import paho.mqtt.client as mqtt
-import sys
-import re
 
 
 def ext_from(s1):
@@ -295,7 +289,7 @@ class MQTTController(QWidget):
 		# ------------------------------------------------------------ window位置の再生
 		self.settings.beginGroup('window')
 		# 初回起動のサイズの指定とか、復元とか
-		self.resize(self.settings.value("size", QSize(1024, 480)))
+		self.resize(self.settings.value("size", QSize(320, 280)))
 		self.move(self.settings.value("pos", QPoint(0, 0)))
 		self.settings.endGroup()
 		# ------------------------------------------------------------ window位置の再生
@@ -338,3 +332,5 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
+
